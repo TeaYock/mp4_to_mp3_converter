@@ -1,2 +1,4 @@
-idea./
+.idea/
 __pycache__/
+app/mp4_files
+app/mp3_files
