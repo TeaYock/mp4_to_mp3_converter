@@ -1,4 +1,5 @@
 from moviepy.editor import VideoFileClip
+from pytube import YouTube
 import os
 
 #Creating directories for mp4 files
@@ -17,4 +18,12 @@ def m4_convertation_mp3(file_name, bitrate):
     video.audio.write_audiofile(f"mp3_files/{file_path_mp3}", bitrate=bitrate)
     video.close()
 
-m4_convertation_mp3(test_path, "10k")
+
+DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
+def youtube_convertation_mp3(youtube_url):
+    video = YouTube(youtube_url)
+    audio_stream = video.streams.filter(only_audio=True).first()
+    audio_file_path = audio_stream.download(filename=f"mp3_files/{video.title}.mp3")
+
+#m4_convertation_mp3(test_path, "10k")
+youtube_convertation_mp3(DMC_url)
