@@ -1,5 +1,5 @@
-from flask import Flask, request, send_file
-from app.mp4_to_mp3 import m4_convertation_mp3, youtube_convertation_mp3
+from flask import Flask, request, send_file, after_this_request
+from app.mp4_to_mp3 import m4_convertation_mp3, youtube_convertation_mp3, remove_file
 app = Flask(__name__)
 
 """
@@ -14,7 +14,15 @@ def m4_convertation_mp3_api():
 def youtube_convertation_mp3_api():
     youtube_url = request.args.get('url', '')
     file_path=youtube_convertation_mp3(youtube_url)
+
+#deleting mp3
+    @after_this_request
+    def remove_file(response):
+        remove_file(file_path)
+        return response
+
     return send_file(file_path, as_attachment=True)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,6 +12,13 @@ def creating_mp3_dir():
     if not os.path.exists("mp3_files"):
         os.makedirs("mp3_files")
 
+#deleting file
+def remove_file(file_path: str) -> None:
+    try:
+        os.remove(file_path)
+    except Exception as e:
+        print(f'Error deleting file: {e}')
+
 #test video
 #test_path = "yt1s.com -  Devil May Cry 5  I AM THE STORM THAT IS APPROACHING BUT IN 4K_1080pFHR.mp4"
 
