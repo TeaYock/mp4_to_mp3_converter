@@ -3,7 +3,7 @@ from pytube import YouTube
 import os
 
 #Creating directories for mp4 files
-def crating_m4_dir():
+def creating_mp4_dir():
     if not os.path.exists("mp4_files"):
         os.makedirs("mp4_files")
 
