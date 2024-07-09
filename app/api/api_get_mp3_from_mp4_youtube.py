@@ -4,12 +4,12 @@ import time
 import os
 app = Flask(__name__)
 
-"""
-@app.route('/m4_convertation_mp3')
+
+@app.route('/m4_convertation_mp3', methods=['POST'])
 def m4_convertation_mp3_api():
     file_path="../mp3_files/[ Devil May Cry 5 ] I AM THE STORM THAT IS APPROACHING BUT IN 4K.mp3"
     return send_file(file_path, as_attachment=True)
-"""
+
 
 #youtube url to mp3 convertation with download on client side
 @app.route('/youtube_convertation_mp3', methods=['GET'])
