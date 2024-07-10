@@ -1,14 +1,30 @@
-from flask import Flask, request, send_file, after_this_request
-from app.mp4_to_mp3 import m4_convertation_mp3, youtube_convertation_mp3, remove_file
+from flask import Flask, request, send_file, after_this_request, redirect, render_template
+from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file
 import time
 import os
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return render_template('test_page_mp4_to_mp3.html')
 
-@app.route('/m4_convertation_mp3', methods=['POST'])
+@app.route('/mp4_convertation_mp3', methods=['POST'])
 def m4_convertation_mp3_api():
-    file_path="../mp3_files/[ Devil May Cry 5 ] I AM THE STORM THAT IS APPROACHING BUT IN 4K.mp3"
-    return send_file(file_path, as_attachment=True)
+    if 'mp4_file' not in request.files:
+        return redirect(request.url)
+
+    mp4_file = request.files['mp4_file']
+
+    if mp4_file.filename == '':
+        return redirect(request.url)
+
+    if mp4_file:
+        mp4_path = os.path.join('../mp4_files', mp4_file.filename)
+        mp4_file.save(mp4_path)
+
+    mp3_path = mp4_convertation_mp3(file_name=mp4_file.filename)
+
+    return send_file(mp3_path, as_attachment=True)
 
 
 #youtube url to mp3 convertation with download on client side
