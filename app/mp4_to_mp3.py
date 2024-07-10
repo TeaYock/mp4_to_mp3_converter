@@ -25,7 +25,7 @@ def remove_file(file_path: str) -> None:
 #Video to audio convertation function
 def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> str:
     video = VideoFileClip(f"../mp4_files/{file_name}")
-    file_path_mp3 = f"mp3_files/{file_name[:-len('.mp4')]}.mp3"
+    file_path_mp3 = f"../mp3_files/{file_name[:-len('.mp4')]}.mp3"
     video.audio.write_audiofile(file_path_mp3, bitrate=bitrate)
     video.close()
     return file_path_mp3
