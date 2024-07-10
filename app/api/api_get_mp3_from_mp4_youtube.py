@@ -1,15 +1,15 @@
-from flask import Flask, request, send_file, after_this_request, redirect, render_template
+from flask import Flask, request, send_file, after_this_request, redirect, render_template, Response
 from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file
 import time
 import os
 app = Flask(__name__)
 
 @app.route('/')
-def index():
+def index() -> str:
     return render_template('test_page_mp4_to_mp3.html')
 
 @app.route('/mp4_convertation_mp3', methods=['POST'])
-def m4_convertation_mp3_api():
+def m4_convertation_mp3_api() -> Response:
     if 'mp4_file' not in request.files:
         return redirect(request.url)
 
