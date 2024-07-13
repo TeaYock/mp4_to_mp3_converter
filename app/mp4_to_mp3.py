@@ -15,13 +15,14 @@ def creating_mp3_dir():
         os.makedirs("mp3_files")
 
 #deleting file
-def remove_file(mp3_path: str) -> io.BytesIO:
+def remove_file(mp3_path: str, mp4_path: str = None) -> io.BytesIO:
     return_data = io.BytesIO()
     with open(mp3_path, 'rb') as fo:
         return_data.write(fo.read())
     return_data.seek(0)
-
     os.remove(mp3_path)
+    if mp4_path is not None:
+        os.remove(mp4_path)
     return return_data
 
 #test video
