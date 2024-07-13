@@ -32,7 +32,7 @@ def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> str:
     return file_path_mp3
 
 #test url
-DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
+#DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
 #Rec_url = "https://www.youtube.com/watch?v=WfVejsi42eI"
 
 #YouTube url to audio convertation function
@@ -46,19 +46,20 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
 
     #youtube to mp3 convertation using yt_dlp
     except:
-        file_path_mp3 = f"mp3_files/%(title)s.%(ext)s"
-
         ydl_opts = {
             'format': 'bestaudio/best',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
             }],
-            'outtmpl': file_path_mp3,
+            'outtmpl': "../mp3_files/%(title)s.%(ext)s",
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([youtube_url])
+            info_dict = ydl.extract_info(youtube_url, download=True)
+            title = info_dict.get('title', None)
+
+        file_path_mp3 = f"../mp3_files/{title}.mp3"
 
         return file_path_mp3
 
