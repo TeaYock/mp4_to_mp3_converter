@@ -1,6 +1,5 @@
 from flask import Flask, request, send_file, after_this_request, redirect, render_template, Response
 from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file
-import time
 import io
 import os
 app = Flask(__name__)
@@ -30,19 +29,13 @@ def m4_convertation_mp3_api() -> Response:
 
 #youtube url to mp3 convertation with download on client side
 @app.route('/youtube_convertation_mp3', methods=['GET'])
-def youtube_convertation_mp3_api():
+def youtube_convertation_mp3_api() -> Response:
     youtube_url = request.args.get('url', '')
     mp3_path=youtube_convertation_mp3(youtube_url)
-
-    return_data = io.BytesIO()
-    with open(mp3_path, 'rb') as fo:
-        return_data.write(fo.read())
-    return_data.seek(0)
-
-    os.remove(mp3_path)
-
+    mp3_name=os.path.basename(mp3_path)
+    return_data = remove_file(mp3_path)
     return send_file(return_data, mimetype='audio/mpeg',
-                     download_name='download_filename.mp3')
+                     download_name=mp3_name)
 
 if __name__ == '__main__':
     app.run(debug=True)

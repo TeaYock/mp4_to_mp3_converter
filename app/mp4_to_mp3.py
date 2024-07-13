@@ -1,5 +1,6 @@
 from moviepy.editor import VideoFileClip
 from pytube import YouTube
+import io
 import os
 import yt_dlp
 
@@ -14,11 +15,14 @@ def creating_mp3_dir():
         os.makedirs("mp3_files")
 
 #deleting file
-def remove_file(file_path: str) -> None:
-    try:
-        os.remove(file_path)
-    except Exception as e:
-        print(f'Error deleting file: {e}')
+def remove_file(mp3_path: str) -> io.BytesIO:
+    return_data = io.BytesIO()
+    with open(mp3_path, 'rb') as fo:
+        return_data.write(fo.read())
+    return_data.seek(0)
+
+    os.remove(mp3_path)
+    return return_data
 
 #test video
 #test_path = "yt1s.com -  Devil May Cry 5  I AM THE STORM THAT IS APPROACHING BUT IN 4K_1080pFHR.mp4"
