@@ -1,6 +1,7 @@
 from moviepy.editor import VideoFileClip
 from pytube import YouTube
 import os
+import yt_dlp
 
 #Creating directories for mp4 files
 def creating_mp4_dir():
@@ -31,15 +32,35 @@ def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> str:
     return file_path_mp3
 
 #test url
-#DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
+DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
+#Rec_url = "https://www.youtube.com/watch?v=WfVejsi42eI"
 
 #YouTube url to audio convertation function
 def youtube_convertation_mp3(youtube_url: str) -> str:
-    video = YouTube(youtube_url)
-    audio_stream = video.streams.filter(only_audio=True).first()
-    audio_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
-    return audio_file_path
+    #youtube to mp3 convertation using pytube
+    try:
+        video = YouTube(youtube_url)
+        audio_stream = video.streams.filter(only_audio=True).first()
+        audio_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
+        return audio_file_path
 
+    #youtube to mp3 convertation using yt_dlp
+    except:
+        file_path_mp3 = f"mp3_files/%(title)s.%(ext)s"
+
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+            }],
+            'outtmpl': file_path_mp3,
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([youtube_url])
+
+        return file_path_mp3
 
 #Test useges
 #mp4_convertation_mp3(test_path, "10k")

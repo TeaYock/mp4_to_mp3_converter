@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, after_this_request, redirect, render_template, Response
 from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file
 import time
+import io
 import os
 app = Flask(__name__)
 
@@ -31,7 +32,18 @@ def m4_convertation_mp3_api() -> Response:
 @app.route('/youtube_convertation_mp3', methods=['GET'])
 def youtube_convertation_mp3_api():
     youtube_url = request.args.get('url', '')
-    file_path=youtube_convertation_mp3(youtube_url)
+    mp3_path=youtube_convertation_mp3(youtube_url)
+    print(mp3_path)
+    return_data = io.BytesIO()
+    with open(mp3_path, 'rb') as fo:
+        return_data.write(fo.read())
+    return_data.seek(0)
+
+    os.remove(mp3_path)
+
+    return send_file(return_data, mimetype='audio/mpeg',
+                     download_name='download_filename.mp3')
+
 #deleting mp3
     """
     @after_this_request
@@ -42,7 +54,7 @@ def youtube_convertation_mp3_api():
         except Exception as e:
             print(f'Error deleting file: {e}')
         return response
-    """
+    
     try:
         return send_file(file_path, as_attachment=True)
     finally:
@@ -51,7 +63,7 @@ def youtube_convertation_mp3_api():
             os.remove(file_path)
         except Exception as e:
             print(f'Error deleting file: {e}')
-
+    """
 
 if __name__ == '__main__':
     app.run(debug=True)
