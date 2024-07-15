@@ -21,12 +21,10 @@ def mp4_convertation_mp3_api() -> Response:
     if mp4_file:
         mp4_path = os.path.join('../mp4_files/', mp4_file.filename)
         mp4_file.save(mp4_path)
-
-        mp3_path = mp4_convertation_mp3(file_name=mp4_file.filename)
-
+        mp3_path, mp3_filename = mp4_convertation_mp3(file_name=mp4_file.filename)
         return_data = remove_file(mp3_path=mp3_path, mp4_path=mp4_path)
         return send_file(return_data, mimetype='audio/mpeg',
-                         as_attachment=True, download_name=mp4_file.filename)
+                         as_attachment=True, download_name=mp3_filename)
 
 
 #youtube url to mp3 convertation with download on client side

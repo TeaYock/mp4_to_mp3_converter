@@ -29,12 +29,13 @@ def remove_file(mp3_path: str, mp4_path: str = None) -> io.BytesIO:
 #test_path = "yt1s.com -  Devil May Cry 5  I AM THE STORM THAT IS APPROACHING BUT IN 4K_1080pFHR.mp4"
 
 #Video to audio convertation function
-def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> str:
+def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> [str, str]:
     video = VideoFileClip(f"../mp4_files/{file_name}")
     file_path_mp3 = f"../mp3_files/{file_name[:-len('.mp4')]}.mp3"
+    mp3_filename = f"{file_name[:-len('.mp4')]}.mp3"
     video.audio.write_audiofile(file_path_mp3, bitrate=bitrate)
     video.close()
-    return file_path_mp3
+    return file_path_mp3, mp3_filename
 
 #test url
 #DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
