@@ -1,8 +1,10 @@
 from flask import Flask, request, send_file, after_this_request, redirect, render_template, Response
-from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file
-import io
+from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file, creating_mp4_dir, creating_mp3_dir
 import os
 app = Flask(__name__)
+
+creating_mp4_dir()
+creating_mp3_dir()
 
 @app.route('/')
 def index() -> str:

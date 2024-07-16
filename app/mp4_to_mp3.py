@@ -1,28 +1,31 @@
 from moviepy.editor import VideoFileClip
 from pytube import YouTube
-import io
-import os
-import yt_dlp
+from io import BytesIO
+from os import remove, path, makedirs
+from yt_dlp import YoutubeDL
+#import io
+#import os
+#import yt_dlp
 
 #Creating directories for mp4 files
 def creating_mp4_dir():
-    if not os.path.exists("mp4_files"):
-        os.makedirs("mp4_files")
+    if not path.exists("../mp4_files"):
+        makedirs("../mp4_files")
 
 #Creating directories for mp3 files
 def creating_mp3_dir():
-    if not os.path.exists("mp3_files"):
-        os.makedirs("mp3_files")
+    if not path.exists("../mp3_files"):
+        makedirs("../mp3_files")
 
 #deleting file
-def remove_file(mp3_path: str, mp4_path: str = None) -> io.BytesIO:
-    return_data = io.BytesIO()
+def remove_file(mp3_path: str, mp4_path: str = None) -> BytesIO:
+    return_data = BytesIO()
     with open(mp3_path, 'rb') as fo:
         return_data.write(fo.read())
     return_data.seek(0)
-    os.remove(mp3_path)
+    remove(mp3_path)
     if mp4_path is not None:
-        os.remove(mp4_path)
+        remove(mp4_path)
     return return_data
 
 #test video
@@ -61,7 +64,7 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
             'outtmpl': "../mp3_files/%(title)s.%(ext)s",
         }
 
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        with YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(youtube_url, download=True)
             title = info_dict.get('title', None)
 
