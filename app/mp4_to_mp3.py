@@ -3,9 +3,6 @@ from pytube import YouTube
 from io import BytesIO
 from os import remove, path, makedirs
 from yt_dlp import YoutubeDL
-#import io
-#import os
-#import yt_dlp
 
 #Creating directories for mp4 files
 def creating_mp4_dir():
@@ -24,12 +21,10 @@ def remove_file(mp3_path: str, mp4_path: str = None) -> BytesIO:
         return_data.write(fo.read())
     return_data.seek(0)
     remove(mp3_path)
-    if mp4_path is not None:
+    if mp4_path:
         remove(mp4_path)
     return return_data
 
-#test video
-#test_path = "yt1s.com -  Devil May Cry 5  I AM THE STORM THAT IS APPROACHING BUT IN 4K_1080pFHR.mp4"
 
 #Video to audio convertation function
 def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> [str, str]:
@@ -39,10 +34,6 @@ def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> [str, str]:
     video.audio.write_audiofile(file_path_mp3, bitrate=bitrate)
     video.close()
     return file_path_mp3, mp3_filename
-
-#test url
-#DMC_url="https://www.youtube.com/watch?v=d-ggzGbsEWE"
-#Rec_url = "https://www.youtube.com/watch?v=WfVejsi42eI"
 
 #YouTube url to audio convertation function
 def youtube_convertation_mp3(youtube_url: str) -> str:
@@ -71,7 +62,3 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
         file_path_mp3 = f"../mp3_files/{title}.mp3"
 
         return file_path_mp3
-
-#Test useges
-#mp4_convertation_mp3(test_path, "10k")
-#youtube_convertation_mp3(DMC_url)
