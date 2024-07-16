@@ -4,17 +4,17 @@ from io import BytesIO
 from os import remove, path, makedirs
 from yt_dlp import YoutubeDL
 
-#Creating directories for mp4 files
+# Сreating directories for mp4 files
 def creating_mp4_dir() -> None:
     if not path.exists("../mp4_files"):
         makedirs("../mp4_files")
 
-#Creating directories for mp3 files
+# Creating directories for mp3 files
 def creating_mp3_dir() -> None:
     if not path.exists("../mp3_files"):
         makedirs("../mp3_files")
 
-#deleting file and make return data in byte stream for response
+# Deleting file and make return data in byte stream for response
 def remove_file_make_return_data(mp3_path: str, mp4_path: str = None) -> BytesIO:
     mp3_byte_data = BytesIO()
     with open(mp3_path, 'rb') as mp3_file:
@@ -26,7 +26,7 @@ def remove_file_make_return_data(mp3_path: str, mp4_path: str = None) -> BytesIO
     return mp3_byte_data
 
 
-#Video to audio convertation function
+# Video to audio convertation function
 def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str]:
     video = VideoFileClip(f"../mp4_files/{mp4_file_name}")
     mp3_file_path = f"../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3"
@@ -35,16 +35,16 @@ def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str
     video.close()
     return mp3_file_path, mp3_filename
 
-#YouTube url to audio convertation function
+# YouTube url to audio convertation function
 def youtube_convertation_mp3(youtube_url: str) -> str:
-    #youtube to mp3 convertation using pytube
+    #  YouTube to mp3 convertation using pytube
     try:
         video = YouTube(youtube_url)
         audio_stream = video.streams.filter(only_audio=True).first()
         mp3_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
         return mp3_file_path
 
-    #youtube to mp3 convertation using yt_dlp
+    #  YouTube to mp3 convertation using yt_dlp
     except:
         ydl_opts = {
             'format': 'bestaudio/best',
@@ -60,5 +60,4 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
             mp3_file_name = info_dict.get('title', None)
 
         mp3_file_path = f"../mp3_files/{mp3_file_name}.mp3"
-
         return mp3_file_path
