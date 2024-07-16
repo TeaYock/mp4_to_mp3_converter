@@ -5,35 +5,35 @@ from os import remove, path, makedirs
 from yt_dlp import YoutubeDL
 
 #Creating directories for mp4 files
-def creating_mp4_dir():
+def creating_mp4_dir() -> None:
     if not path.exists("../mp4_files"):
         makedirs("../mp4_files")
 
 #Creating directories for mp3 files
-def creating_mp3_dir():
+def creating_mp3_dir() -> None:
     if not path.exists("../mp3_files"):
         makedirs("../mp3_files")
 
-#deleting file
-def remove_file(mp3_path: str, mp4_path: str = None) -> BytesIO:
-    return_data = BytesIO()
-    with open(mp3_path, 'rb') as fo:
-        return_data.write(fo.read())
-    return_data.seek(0)
+#deleting file and make return data in byte stream for response
+def remove_file_make_return_data(mp3_path: str, mp4_path: str = None) -> BytesIO:
+    mp3_byte_data = BytesIO()
+    with open(mp3_path, 'rb') as mp3_file:
+        mp3_byte_data.write(mp3_file.read())
+    mp3_byte_data.seek(0)
     remove(mp3_path)
     if mp4_path:
         remove(mp4_path)
-    return return_data
+    return mp3_byte_data
 
 
 #Video to audio convertation function
-def mp4_convertation_mp3(file_name: str, bitrate: str = '320k') -> [str, str]:
-    video = VideoFileClip(f"../mp4_files/{file_name}")
-    file_path_mp3 = f"../mp3_files/{file_name[:-len('.mp4')]}.mp3"
-    mp3_filename = f"{file_name[:-len('.mp4')]}.mp3"
-    video.audio.write_audiofile(file_path_mp3, bitrate=bitrate)
+def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str]:
+    video = VideoFileClip(f"../mp4_files/{mp4_file_name}")
+    mp3_file_path = f"../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3"
+    mp3_filename = f"{mp4_file_name[:-len('.mp4')]}.mp3"
+    video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
     video.close()
-    return file_path_mp3, mp3_filename
+    return mp3_file_path, mp3_filename
 
 #YouTube url to audio convertation function
 def youtube_convertation_mp3(youtube_url: str) -> str:
@@ -41,8 +41,8 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
     try:
         video = YouTube(youtube_url)
         audio_stream = video.streams.filter(only_audio=True).first()
-        audio_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
-        return audio_file_path
+        mp3_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
+        return mp3_file_path
 
     #youtube to mp3 convertation using yt_dlp
     except:
@@ -57,8 +57,8 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
 
         with YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(youtube_url, download=True)
-            title = info_dict.get('title', None)
+            mp3_file_name = info_dict.get('title', None)
 
-        file_path_mp3 = f"../mp3_files/{title}.mp3"
+        mp3_file_path = f"../mp3_files/{mp3_file_name}.mp3"
 
-        return file_path_mp3
+        return mp3_file_path
