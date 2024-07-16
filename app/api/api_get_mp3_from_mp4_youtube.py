@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, after_this_request, redirect, render_template, Response
+from flask import Flask, request, send_file, redirect, render_template, Response
 from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file, creating_mp4_dir, creating_mp3_dir
 from os import path
 app = Flask(__name__)
