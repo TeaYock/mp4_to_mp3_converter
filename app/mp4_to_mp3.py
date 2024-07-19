@@ -41,6 +41,7 @@ def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str
     return mp3_file_path, mp3_filename
 
 # YouTube url to audio convertation function
+# With using two libraries in case one of them fails
 def youtube_convertation_mp3(youtube_url: str) -> str:
     #  YouTube to mp3 convertation using pytube
     try:
