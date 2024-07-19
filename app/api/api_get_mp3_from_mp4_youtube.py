@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, request, send_file, redirect, render_template, Response, jsonify, make_response
-from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_return_data, creating_mp4_dir, creating_mp3_dir
+from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data, creating_mp4_dir, creating_mp3_dir
 from os import path
 app = Flask(__name__)
 
@@ -38,7 +38,7 @@ def mp4_convertation_mp3_api() -> Response:
             return error_response
 
         # Converting mp3 file to byte stream and sending response to client
-        response_data = remove_file_make_return_data(mp3_path=mp3_path, mp4_path=mp4_path)
+        response_data = remove_file_make_response_data(mp3_path=mp3_path, mp4_path=mp4_path)
         return send_file(response_data, mimetype='audio/mpeg',
                          as_attachment=True, download_name=mp3_filename)
 
@@ -54,7 +54,7 @@ def youtube_convertation_mp3_api() -> Response:
     mp3_name=path.basename(mp3_path)
 
     # Converting mp3 file to byte stream and sending response to client
-    response_data = remove_file_make_return_data(mp3_path = mp3_path)
+    response_data = remove_file_make_response_data(mp3_path = mp3_path)
     return send_file(response_data, mimetype='audio/mpeg',
                      download_name=mp3_name)
 
