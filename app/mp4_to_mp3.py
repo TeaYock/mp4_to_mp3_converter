@@ -15,6 +15,8 @@ def creating_mp3_dir() -> None:
         makedirs("../mp3_files")
 
 # Deleting file and make return data in byte stream for response
+# The file sent in the response cannot be deleted because it is being used to send to the client.
+# Therefore, the file is loaded into a byte stream, which will be sent. After that, the file can be deleted.
 def remove_file_make_return_data(mp3_path: str, mp4_path: str = None) -> BytesIO:
     mp3_byte_data = BytesIO()
     with open(mp3_path, 'rb') as mp3_file:
