@@ -3,6 +3,7 @@ from pytube import YouTube
 from io import BytesIO
 from os import remove, path, makedirs
 from yt_dlp import YoutubeDL
+from typing import NewType
 
 # Сreating directories for mp4 files
 def creating_mp4_dir() -> None:
@@ -27,9 +28,11 @@ def remove_file_make_response_data(mp3_path: str, mp4_path: str = None) -> Bytes
         remove(mp4_path)
     return mp3_byte_data
 
+# Mp3 path custom data type
+Mp3Path = NewType('Mp3Path', str)
 
 # Video to audio convertation function
-def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str]:
+def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path, str]:
     video = VideoFileClip(f"../mp4_files/{mp4_file_name}")
     mp3_file_path = f"../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3"
     mp3_filename = f"{mp4_file_name[:-len('.mp4')]}.mp3"
@@ -38,17 +41,17 @@ def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [str, str
         raise ValueError("The video file does not contain an audio track")
     video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
     video.close()
-    return mp3_file_path, mp3_filename
+    return Mp3Path(mp3_file_path), mp3_filename
 
 # YouTube url to audio convertation function
 # With using two libraries in case one of them fails
-def youtube_convertation_mp3(youtube_url: str) -> str:
+def youtube_convertation_mp3(youtube_url: str) -> Mp3Path:
     #  YouTube to mp3 convertation using pytube
     try:
         video = YouTube(youtube_url)
         audio_stream = video.streams.filter(only_audio=True).first()
         mp3_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
-        return mp3_file_path
+        return Mp3Path(mp3_file_path)
 
     #  YouTube to mp3 convertation using yt_dlp
     except:
@@ -66,4 +69,4 @@ def youtube_convertation_mp3(youtube_url: str) -> str:
             mp3_file_name = info_dict.get('title', None)
 
         mp3_file_path = f"../mp3_files/{mp3_file_name}.mp3"
-        return mp3_file_path
+        return Mp3Path(mp3_file_path)
