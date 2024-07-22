@@ -15,14 +15,16 @@ api = Api(app, doc='/swagger/',
 
 # Defining a namespace for the API
 ns = api.namespace('mp3_online_convertation', description='MP4 to MP3 and YouTube to MP3 convertation operations')
+convertation_ns = api.namespace('conversion', description='Conversion operations')
 
 # Model for downloading MP4 file
 upload_parser = api.parser()
-upload_parser.add_argument('mp4_file', location='files', type='FileStorage', required=True, help='The MP4 file to be uploaded')
+upload_parser.add_argument('mp4_file', location='files', type='FileStorage',
+                           required=True, help='The MP4 file to be uploaded')
 
 # Model for YouTube URL
-youtube_model = api.model('YouTube', {
-    'url': fields.String(type='String', required=True, description='The YouTube URL to be converted to MP3')
+youtube_model = convertation_ns.model('YouTube', {
+    'url': fields.String(required=True, description='The YouTube URL to be converted to MP3')
 })
 
 # Error model no audio
@@ -48,7 +50,7 @@ class MP4ToMP3(Resource):
 # Resource class for converting YouTube URL to MP3
 @ns.route('/youtube_convertation_mp3')
 class YouTubeToMP3(Resource):
-    @api.expect(youtube_model, validate=True)
+    @api.doc(youtube_model, params={'url': 'The YouTube URL to be converted to MP3'})
     @api.response(200, 'Success', headers={'Content-Disposition': 'attachment; filename=output.mp3'})
     @api.response(400, 'Bad Request', model=error_model)
     @api.response(500, 'Internal Server Error')
