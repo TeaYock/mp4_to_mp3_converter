@@ -1,4 +1,4 @@
-from pytest import fixture, main, MonkeyPatch
+from pytest import fixture, raises, main, MonkeyPatch
 from moviepy.editor import VideoFileClip
 from pytube import YouTube
 from io import BytesIO
@@ -32,6 +32,35 @@ def test_mp4_convertation_mp3(dirs_creation):
     assert mp3_path == '../mp3_files/video_standart.mp3'
     assert mp3_filename == 'video_standart.mp3'
 
+def test_mp4_convertation_mp3_no_audio(dirs_creation):
+    mp4_file_path = '../mp4_files/video_no_audio.mp4'
+    mp4_clip = VideoFileClip('test_videos/video_no_audio.mp4')
+    mp4_clip.write_videofile(mp4_file_path)
+
+    with raises(ValueError, match="The video file does not contain an audio track"):
+        mp4_convertation_mp3(mp4_file_path)
+
+def test_mp4_convertation_mp3_2_audio(dirs_creation):
+    mp4_file_path = '../mp4_files/video_2_audio.mp4'
+    mp4_clip = VideoFileClip('test_videos/video_2_audio.mp4')
+    mp4_clip.write_videofile(mp4_file_path)
+
+    mp3_path, mp3_filename = mp4_convertation_mp3(path.basename(mp4_file_path))
+
+    assert path.exists(mp3_path)
+    assert mp3_path == '../mp3_files/video_2_audio.mp3'
+    assert mp3_filename == 'video_2_audio.mp3'
+
+def test_mp4_convertation_mp3_no_videotrack(dirs_creation):
+    mp4_file_path = '../mp4_files/video_no_videotrack.mp4'
+    mp4_clip = VideoFileClip('test_videos/video_no_videotrack.mp4')
+    mp4_clip.write_videofile(mp4_file_path)
+
+    mp3_path, mp3_filename = mp4_convertation_mp3(path.basename(mp4_file_path))
+
+    assert path.exists(mp3_path)
+    assert mp3_path == '../mp3_files/video_no_videotrack.mp3'
+    assert mp3_filename == 'video_no_videotrack.mp3'
 '''
 def test_remove_file_make_response_data(tmp_path):
     # Create a dummy mp3 file

@@ -7,13 +7,13 @@ from typing import NewType
 
 # Сreating directories for mp4 files
 def creating_mp4_dir() -> None:
-    if not path.exists("../mp4_files"):
-        makedirs("../mp4_files")
+    if not path.exists('../mp4_files'):
+        makedirs('../mp4_files')
 
 # Creating directories for mp3 files
 def creating_mp3_dir() -> None:
-    if not path.exists("../mp3_files"):
-        makedirs("../mp3_files")
+    if not path.exists('../mp3_files'):
+        makedirs('../mp3_files')
 
 # Deleting file and make return data in byte stream for response
 # The file sent in the response cannot be deleted because it is being used to send to the client.
@@ -33,12 +33,12 @@ Mp3Path = NewType('Mp3Path', str)
 
 # Video to audio convertation function
 def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path, str]:
-    video = VideoFileClip(f"../mp4_files/{mp4_file_name}")
-    mp3_file_path = f"../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3"
-    mp3_filename = f"{mp4_file_name[:-len('.mp4')]}.mp3"
+    video = VideoFileClip(f'../mp4_files/{mp4_file_name}')
+    mp3_file_path = f'../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3'
+    mp3_filename = f'{mp4_file_name[:-len('.mp4')]}.mp3'
     if video.audio is None:
         video.close()
-        raise ValueError("The video file does not contain an audio track")
+        raise ValueError('The video file does not contain an audio track')
     video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
     video.close()
     return Mp3Path(mp3_file_path), mp3_filename
@@ -50,7 +50,7 @@ def youtube_convertation_mp3(youtube_url: str) -> Mp3Path:
     try:
         video = YouTube(youtube_url)
         audio_stream = video.streams.filter(only_audio=True).first()
-        mp3_file_path = audio_stream.download(filename=f"../mp3_files/{video.title}.mp3")
+        mp3_file_path = audio_stream.download(filename=f'../mp3_files/{video.title}.mp3')
         return Mp3Path(mp3_file_path)
 
     #  YouTube to mp3 convertation using yt_dlp
@@ -61,12 +61,12 @@ def youtube_convertation_mp3(youtube_url: str) -> Mp3Path:
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
             }],
-            'outtmpl': "../mp3_files/%(title)s.%(ext)s",
+            'outtmpl': '../mp3_files/%(title)s.%(ext)s',
         }
 
         with YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(youtube_url, download=True)
             mp3_file_name = info_dict.get('title', None)
 
-        mp3_file_path = f"../mp3_files/{mp3_file_name}.mp3"
+        mp3_file_path = f'../mp3_files/{mp3_file_name}.mp3'
         return Mp3Path(mp3_file_path)
