@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip, AudioFileClip
 from pytube import YouTube
 from io import BytesIO
 from os import remove, path, makedirs
@@ -33,15 +33,22 @@ Mp3Path = NewType('Mp3Path', str)
 
 # Video to audio convertation function
 def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path, str]:
-    video = VideoFileClip(f'../mp4_files/{mp4_file_name}')
     mp3_file_path = f'../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3'
     mp3_filename = f'{mp4_file_name[:-len('.mp4')]}.mp3'
-    if video.audio is None:
+    mp4_file_path = f'../mp4_files/{mp4_file_name}'
+    try:
+        video = VideoFileClip(mp4_file_path)
+        if video.audio is None:
+            video.close()
+            raise ValueError('The video file does not contain an audio track')
+        video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
         video.close()
-        raise ValueError('The video file does not contain an audio track')
-    video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
-    video.close()
-    return Mp3Path(mp3_file_path), mp3_filename
+        return Mp3Path(mp3_file_path), mp3_filename
+    except KeyError:
+        audio = AudioFileClip(mp4_file_path)
+        audio.write_audiofile(mp3_file_path, bitrate=bitrate)
+        audio.close()
+        return Mp3Path(mp3_file_path), mp3_filename
 
 # YouTube url to audio convertation function
 # With using two libraries in case one of them fails
