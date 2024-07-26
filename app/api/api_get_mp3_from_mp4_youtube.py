@@ -1,7 +1,6 @@
-import os
 from flask import Flask, request, send_file, redirect, render_template, Response, jsonify, make_response
 from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data, creating_mp4_dir, creating_mp3_dir
-from os import path
+from os import path, remove
 app = Flask(__name__)
 
 # Make directories for mp3 and mp4
@@ -32,7 +31,7 @@ def mp4_convertation_mp3_api() -> Response:
         try:
             mp3_path, mp3_filename = mp4_convertation_mp3(mp4_file_name=mp4_file.filename)
         except ValueError as e:
-            os.remove(mp4_path)
+            remove(mp4_path)
             error_response = make_response(jsonify({'error': str(e)}), 400)
             return error_response
 

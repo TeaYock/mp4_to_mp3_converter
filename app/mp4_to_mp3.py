@@ -49,6 +49,8 @@ def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path,
         audio.write_audiofile(mp3_file_path, bitrate=bitrate)
         audio.close()
         return Mp3Path(mp3_file_path), mp3_filename
+    except Exception:
+        raise ValueError(f"Error processing video file {mp4_file_name}")
 
 # YouTube url to audio convertation function
 # With using two libraries in case one of them fails
