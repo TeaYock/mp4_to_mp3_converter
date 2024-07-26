@@ -1,5 +1,6 @@
 from flask import Flask, request, send_file, redirect, render_template, Response, jsonify, make_response
-from app.mp4_to_mp3 import mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data, creating_mp4_dir, creating_mp3_dir
+from app.mp4_to_mp3 import (mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data,
+                            creating_mp4_dir, creating_mp3_dir, VideoProcessingError, NoAudioTrackError)
 from os import path, remove
 app = Flask(__name__)
 
@@ -30,9 +31,17 @@ def mp4_convertation_mp3_api() -> Response:
         mp4_file.save(mp4_path)
         try:
             mp3_path, mp3_filename = mp4_convertation_mp3(mp4_file_name=mp4_file.filename)
-        except ValueError as e:
+        except NoAudioTrackError as nae:
             remove(mp4_path)
-            error_response = make_response(jsonify({'error': str(e)}), 400)
+            error_response = make_response(jsonify({'error': str(nae)}), 400)
+            return error_response
+        except VideoProcessingError as vpe:
+            remove(mp4_path)
+            error_response = make_response(jsonify({'error': str(vpe)}), 400)
+            return error_response
+        except ValueError as ve:
+            remove(mp4_path)
+            error_response = make_response(jsonify({'error': str(ve)}), 400)
             return error_response
 
         # Converting mp3 file to byte stream and sending response to client

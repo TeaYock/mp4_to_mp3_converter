@@ -31,6 +31,14 @@ def remove_file_make_response_data(mp3_path: str, mp4_path: str = None) -> Bytes
 # Mp3 path custom data type
 Mp3Path = NewType('Mp3Path', str)
 
+# Сustom error - audio track missing
+class NoAudioTrackError(Exception):
+    pass
+
+# Сustom error processing video
+class VideoProcessingError(Exception):
+    pass
+
 # Video to audio convertation function
 def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path, str]:
     mp3_file_path = f'../mp3_files/{mp4_file_name[:-len('.mp4')]}.mp3'
@@ -40,17 +48,25 @@ def mp4_convertation_mp3(mp4_file_name: str, bitrate: str = '320k') -> [Mp3Path,
         video = VideoFileClip(mp4_file_path)
         if video.audio is None:
             video.close()
-            raise ValueError('The video file does not contain an audio track')
+            raise NoAudioTrackError(f'The video file {mp4_file_name} does not contain an audio track')
         video.audio.write_audiofile(mp3_file_path, bitrate=bitrate)
         video.close()
         return Mp3Path(mp3_file_path), mp3_filename
+
+    # No videotrack in video
     except KeyError:
         audio = AudioFileClip(mp4_file_path)
         audio.write_audiofile(mp3_file_path, bitrate=bitrate)
         audio.close()
         return Mp3Path(mp3_file_path), mp3_filename
+
+    # No audiotrack in video error
+    except NoAudioTrackError:
+        raise
+
+    # Common error on crashed videos
     except Exception:
-        raise ValueError(f"Error processing video file {mp4_file_name}")
+        raise VideoProcessingError(f'Error processing video file {mp4_file_name}')
 
 # YouTube url to audio convertation function
 # With using two libraries in case one of them fails

@@ -3,12 +3,12 @@ from moviepy.editor import VideoFileClip, AudioFileClip
 from pytube import YouTube
 from io import BytesIO
 from os import remove, path, makedirs
-from shutil import rmtree
+from shutil import rmtree, copy
 from pathlib import Path
 from yt_dlp import YoutubeDL
 from typing import NewType
 from app.mp4_to_mp3 import (creating_mp4_dir, creating_mp3_dir, remove_file_make_response_data,
-    mp4_convertation_mp3, youtube_convertation_mp3, Mp3Path)
+    mp4_convertation_mp3, youtube_convertation_mp3, Mp3Path, VideoProcessingError, NoAudioTrackError)
 
 # Preparing folders for tests
 @fixture(scope='module')
@@ -39,11 +39,22 @@ def test_mp4_convertation_mp3(dirs_creation):
 # Test converting mp4 (1 video track, without audio track) to mp3
 def test_mp4_convertation_mp3_no_audio(dirs_creation):
     mp4_file_path = '../mp4_files/video_no_audio.mp4'
+    mp4_file_name = path.basename(mp4_file_path)
     mp4_clip = VideoFileClip('test_videos/video_no_audio.mp4')
     mp4_clip.write_videofile(mp4_file_path)
 
-    with raises(ValueError, match="The video file does not contain an audio track"):
-        mp4_convertation_mp3(mp4_file_path)
+    with raises(NoAudioTrackError, match=f'The video file {mp4_file_name} does not contain an audio track'):
+        mp4_convertation_mp3(mp4_file_name)
+
+# Test converting crashed mp4
+def test_mp4_convertation_mp3_crashed(dirs_creation):
+    mp4_source_path = 'test_videos/video_crashed.mp4'
+    mp4_file_path = '../mp4_files/video_crashed.mp4'
+    copy(mp4_source_path, mp4_file_path)
+    mp4_file_name = path.basename(mp4_file_path)
+
+    with raises(VideoProcessingError, match=f'Error processing video file {mp4_file_name}'):
+        mp4_convertation_mp3(mp4_file_name)
 
 # Test converting mp4 (1 video track, 2 audio track) to mp3
 def test_mp4_convertation_mp3_2_audio(dirs_creation):
