@@ -27,10 +27,11 @@ def test_dir_creation(dirs_creation):
 # Test converting mp4 (1 video track, 1 audio track) to mp3
 def test_mp4_convertation_mp3(dirs_creation):
     mp4_file_path = '../mp4_files/video_standart.mp4'
+    mp4_file_name = path.basename(mp4_file_path)
     mp4_clip = VideoFileClip('test_videos/video_standart.mp4')
     mp4_clip.write_videofile(mp4_file_path)
 
-    mp3_path, mp3_filename = mp4_convertation_mp3(path.basename(mp4_file_path))
+    mp3_path, mp3_filename = mp4_convertation_mp3(mp4_file_name)
 
     assert path.exists(mp3_path)
     assert mp3_path == '../mp3_files/video_standart.mp3'
@@ -59,10 +60,11 @@ def test_mp4_convertation_mp3_crashed(dirs_creation):
 # Test converting mp4 (1 video track, 2 audio track) to mp3
 def test_mp4_convertation_mp3_2_audio(dirs_creation):
     mp4_file_path = '../mp4_files/video_2_audio.mp4'
+    mp4_file_name = path.basename(mp4_file_path)
     mp4_clip = VideoFileClip('test_videos/video_2_audio.mp4')
     mp4_clip.write_videofile(mp4_file_path)
 
-    mp3_path, mp3_filename = mp4_convertation_mp3(path.basename(mp4_file_path))
+    mp3_path, mp3_filename = mp4_convertation_mp3(mp4_file_name)
 
     assert path.exists(mp3_path)
     assert mp3_path == '../mp3_files/video_2_audio.mp3'
@@ -71,10 +73,11 @@ def test_mp4_convertation_mp3_2_audio(dirs_creation):
 # Test converting mp4 (without video track, 1 audio track) to mp3
 def test_mp4_convertation_mp3_no_videotrack(dirs_creation):
     mp4_file_path = '../mp4_files/video_no_videotrack.mp4'
+    mp4_file_name = path.basename(mp4_file_path)
     mp4_clip = AudioFileClip('test_videos/video_no_videotrack.mp4')
     mp4_clip.write_audiofile(mp4_file_path, codec='aac')
 
-    mp3_path, mp3_filename = mp4_convertation_mp3(path.basename(mp4_file_path))
+    mp3_path, mp3_filename = mp4_convertation_mp3(mp4_file_name)
 
     assert path.exists(mp3_path)
     assert mp3_path == '../mp3_files/video_no_videotrack.mp3'
