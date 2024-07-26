@@ -83,6 +83,12 @@ def test_mp4_convertation_mp3_no_videotrack(dirs_creation):
     assert mp3_path == '../mp3_files/video_no_videotrack.mp3'
     assert mp3_filename == 'video_no_videotrack.mp3'
 
+# Test YouTube convertation to mp3
+def test_youtube_convertation_mp3(dirs_creation):
+    test_url = 'https://www.youtube.com/watch?v=k80A5_9TClQ'
+    mp3_file_path = youtube_convertation_mp3(test_url)
+    assert path.exists(mp3_file_path)
+
 # Test data removing with byte stream returning
 def test_remove_file_make_response_data(dirs_creation):
     # Create a dummy mp3 file
