@@ -1,14 +1,10 @@
-from pytest import fixture, raises, main, MonkeyPatch
+from pytest import fixture, raises
 from moviepy.editor import VideoFileClip, AudioFileClip
-from pytube import YouTube
-from io import BytesIO
-from os import remove, path, makedirs
+from os import path
 from shutil import rmtree, copy
 from pathlib import Path
-from yt_dlp import YoutubeDL
-from typing import NewType
 from app.mp4_to_mp3 import (creating_mp4_dir, creating_mp3_dir, remove_file_make_response_data,
-    mp4_convertation_mp3, youtube_convertation_mp3, Mp3Path, VideoProcessingError, NoAudioTrackError)
+    mp4_convertation_mp3, youtube_convertation_mp3, VideoProcessingError, NoAudioTrackError)
 
 # Preparing folders for tests
 @fixture(scope='module')
