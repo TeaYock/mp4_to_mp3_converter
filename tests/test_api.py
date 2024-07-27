@@ -14,9 +14,7 @@ def client():
 # Test the homepage
 def test_index_page(client):
     response = client.get('/')
-
     assert response.status_code == 200
-
     assert b'Upload your MP4 file to convert to MP3' in response.data
     assert b'<form action="http://localhost:5000/mp4_convertation_mp3"' in response.data
 
@@ -33,18 +31,21 @@ def test_mp4_convertation_mp3_api(client):
         }
         response = client.post('/mp4_convertation_mp3', content_type='multipart/form-data', data=data)
 
-    #
+    # Checking the success of the response and the content type
     assert response.status_code == 200
     assert response.mimetype == 'audio/mpeg'
 
+    # Checking file name in Content-Disposition header
     content_disposition = response.headers.get('Content-Disposition')
     assert expected_mp3_filename in content_disposition
 
+    # Save byte data to a temporary file
     mp3_data = response.data
     with NamedTemporaryFile(suffix=".mp3", delete=False) as temp_mp3:
         temp_mp3.write(mp3_data)
         temp_mp3_path = temp_mp3.name
 
+    # Check temporary file type and remove it
     assert temp_mp3_path.endswith('.mp3')
     remove(temp_mp3_path)
 
@@ -52,15 +53,18 @@ def test_mp4_convertation_mp3_api(client):
 # Test the YouTube to MP3 convertation API with a real YouTube URL
 def test_youtube_convertation_mp3_api(client):
     youtube_url = 'https://www.youtube.com/watch?v=k80A5_9TClQ'
-
     response = client.get('/youtube_convertation_mp3', query_string={'url': youtube_url})
+
+    # Checking the success of the response and the content type
     assert response.status_code == 200
     assert response.mimetype == 'audio/mpeg'
 
+    # Save byte data to a temporary file
     mp3_data = response.data
     with NamedTemporaryFile(suffix=".mp3", delete=False) as temp_mp3:
         temp_mp3.write(mp3_data)
         temp_mp3_path = temp_mp3.name
 
+    # Check temporary file type and remove it
     assert temp_mp3_path.endswith('.mp3')
     remove(temp_mp3_path)
