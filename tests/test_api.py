@@ -1,7 +1,6 @@
 from os import path, remove
 from tempfile import NamedTemporaryFile
-import io
-from pytest import fixture, main
+from pytest import fixture
 from app.api.api_get_mp3_from_mp4_youtube import app
 
 # Test client creation, set location of html files
@@ -16,24 +15,25 @@ def client():
 def test_index_page(client):
     response = client.get('/')
 
-    # Проверка статуса ответа
     assert response.status_code == 200
 
-    # Проверка, что возвращаемый HTML содержит ожидаемые элементы
     assert b'Upload your MP4 file to convert to MP3' in response.data
     assert b'<form action="http://localhost:5000/mp4_convertation_mp3"' in response.data
+
 
 # Test the MP4 to MP3 convertation API
 def test_mp4_convertation_mp3_api(client):
     mp4_file_path = 'test_videos/video_standart.mp4'
     expected_mp3_filename = f'{path.basename(mp4_file_path)[:-len('.mp4')]}.mp3'
 
+    # Uploading file to API
     with open(mp4_file_path, 'rb') as mp4_file:
         data = {
             'mp4_file': (mp4_file, 'video_standart.mp4')
         }
         response = client.post('/mp4_convertation_mp3', content_type='multipart/form-data', data=data)
 
+    #
     assert response.status_code == 200
     assert response.mimetype == 'audio/mpeg'
 
@@ -49,8 +49,18 @@ def test_mp4_convertation_mp3_api(client):
     remove(temp_mp3_path)
 
 
+# Test the YouTube to MP3 convertation API with a real YouTube URL
+def test_youtube_convertation_mp3_api(client):
+    youtube_url = 'https://www.youtube.com/watch?v=k80A5_9TClQ'
 
+    response = client.get('/youtube_convertation_mp3', query_string={'url': youtube_url})
+    assert response.status_code == 200
+    assert response.mimetype == 'audio/mpeg'
 
+    mp3_data = response.data
+    with NamedTemporaryFile(suffix=".mp3", delete=False) as temp_mp3:
+        temp_mp3.write(mp3_data)
+        temp_mp3_path = temp_mp3.name
 
-if __name__ == '__main__':
-    main()
+    assert temp_mp3_path.endswith('.mp3')
+    remove(temp_mp3_path)
