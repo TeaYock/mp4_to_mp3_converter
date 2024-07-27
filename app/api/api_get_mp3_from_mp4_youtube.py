@@ -2,7 +2,8 @@ from flask import Flask, request, send_file, redirect, render_template, Response
 from app.mp4_to_mp3 import (mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data,
                             creating_mp4_dir, creating_mp3_dir, VideoProcessingError, NoAudioTrackError)
 from os import path, remove
-app = Flask(__name__)
+
+app = Flask(__name__, template_folder='./website')
 
 # Make directories for mp3 and mp4
 creating_mp4_dir()
