@@ -53,11 +53,16 @@ def test_mp4_convertation_mp3_api(client):
 # Test the YouTube to MP3 convertation API with a real YouTube URL
 def test_youtube_convertation_mp3_api(client):
     youtube_url = 'https://www.youtube.com/watch?v=k80A5_9TClQ'
+    expected_mp3_filename = 'Hunt Skeleton Meme.mp3'
     response = client.get('/youtube_convertation_mp3', query_string={'url': youtube_url})
 
     # Checking the success of the response and the content type
     assert response.status_code == 200
     assert response.mimetype == 'audio/mpeg'
+
+    # Checking file name in Content-Disposition header
+    content_disposition = response.headers.get('Content-Disposition')
+    assert expected_mp3_filename in content_disposition
 
     # Save byte data to a temporary file
     mp3_data = response.data
