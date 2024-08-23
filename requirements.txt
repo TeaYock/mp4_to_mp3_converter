@@ -1,3 +1,4 @@
 Flask
-pytube
 moviepy
+# Working pull request for pytube containing a fix for the throttling issue
+git+https://github.com/pytube/pytube.git@e7a074e9e4eb3715a0ea05904dcb5f3d55c9fe9f#egg=pytube
