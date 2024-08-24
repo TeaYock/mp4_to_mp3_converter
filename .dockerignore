@@ -1,0 +1,7 @@
+.idea
+__pycache__/
+.git
+.venv/
+tests/
+app/mp3_files
+app/mp4_files
