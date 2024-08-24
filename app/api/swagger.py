@@ -1,5 +1,5 @@
 from flask_restx import Api, Resource, fields
-from api_get_mp3_from_mp4_youtube import app, mp4_convertation_mp3_api, youtube_convertation_mp3_api
+from .api_get_mp3_from_mp4_youtube import app, mp4_convertation_mp3_api, youtube_convertation_mp3_api
 
 # Initialize the API with documentation at /swagger/
 api = Api(app, doc='/swagger/',
@@ -58,4 +58,4 @@ class YouTubeToMP3(Resource):
         return youtube_convertation_mp3_api()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
