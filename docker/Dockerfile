@@ -16,4 +16,4 @@ RUN apt -y autoremove
 ADD . /src/
 
 # Application launch command
-CMD ["python", "app/main.py"]
+CMD ["python", "mp4_to_mp3/app/main.py"]

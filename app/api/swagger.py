@@ -8,7 +8,7 @@ api = Api(app, doc='/swagger/',
           description='API to convert MP4 files and YouTube URLs to MP3.',
           servers=[
               {
-                  'url': 'http://localhost:5000/',
+                  'url': 'http://localhost:5001/',
                   'description': 'Local server'
               }
           ])
