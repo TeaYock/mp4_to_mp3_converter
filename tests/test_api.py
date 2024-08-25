@@ -1,7 +1,9 @@
 from os import path, remove
+from shutil import rmtree
 from tempfile import NamedTemporaryFile
 from pytest import fixture
 from app.api.api_get_mp3_from_mp4_youtube import app
+from app.mp4_to_mp3 import creating_mp4_dir, creating_mp3_dir
 
 # Test client creation, set location of html files
 @fixture
@@ -9,7 +11,12 @@ def client():
     app.config['TESTING'] = True
     client = app.test_client()
     app.template_folder = path.join(path.dirname(path.abspath(__file__)), '../app/website')
+    creating_mp4_dir()
+    creating_mp3_dir()
     yield client
+    rmtree('../mp4_files')
+    rmtree('../mp3_files')
+
 
 # Test the homepage
 def test_index_page(client):

@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install -r requirements.txt
 RUN apt -y autoremove
 
-# Copy
+# Copy application files
 ADD . /src/
 
 # Application launch command
