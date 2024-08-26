@@ -1,21 +1,22 @@
-FROM python:3.12-rc-slim-bullseye
+FROM python:3.12-slim-bullseye
 
-WORKDIR /src/
-COPY requirements.txt .
+WORKDIR /src/mp4_to_mp3
+
+COPY ../requirements.txt .
 
 # Installing system packages and ffmpeg
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt update && \
+    apt install -y --no-install-recommends \
+    git \
     ffmpeg \
-    ca-certificates \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-RUN pip install -r requirements.txt
-RUN apt -y autoremove
+    ca-certificates && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt -y autoremove
 
 # Copy application files
-COPY . .
-
-EXPOSE 5000 5001
+COPY .. .
 
 # Application launch command
 CMD ["python", "mp4_to_mp3/app/main.py"]

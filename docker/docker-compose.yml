@@ -1,7 +1,9 @@
 version: "3.9"
 services:
   mp3_converter:
-    image: mp3_converter:v1
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     container_name: converter
     ports:
       - "5000:5000"
