@@ -1,12 +1,13 @@
-FROM python:3.12-slim-bullseye
+FROM python:3.12-bullseye
 
-WORKDIR /src/mp4_to_mp3
+WORKDIR /src/app
 
 COPY ../requirements.txt .
 
 # Installing system packages and ffmpeg
 RUN apt update && \
     apt install -y --no-install-recommends \
+    coreutils \
     git \
     ffmpeg \
     ca-certificates && \
@@ -16,7 +17,10 @@ RUN apt update && \
     apt -y autoremove
 
 # Copy application files
-COPY .. .
+COPY ../app /src/app
+
+# Set PYTHONPATH environment variable
+ENV PYTHONPATH=/src
 
 # Application launch command
-CMD ["python", "mp4_to_mp3/app/main.py"]
+CMD ["python", "main.py"]

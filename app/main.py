@@ -11,11 +11,11 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 # Run the main API app
 def run_api():
-    api_app.run(debug=True, port=5000, use_reloader=False)
+    api_app.run(debug=True, host='0.0.0.0', port=5000, use_reloader=False)
 
 # Run the Swagger documentation app
 def run_swagger():
-    swagger_app.run(debug=True, port=5001, use_reloader=False)
+    swagger_app.run(debug=True, host='0.0.0.0', port=5001, use_reloader=False)
 
 if __name__ == '__main__':
     # Create separate processes for the API app and the Swagger app

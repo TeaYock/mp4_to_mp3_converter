@@ -3,7 +3,7 @@ from app.mp4_to_mp3 import (mp4_convertation_mp3, youtube_convertation_mp3, remo
                             creating_mp4_dir, creating_mp3_dir, VideoProcessingError, NoAudioTrackError)
 from os import path, remove
 
-app = Flask(__name__, template_folder='./website')
+app = Flask(__name__, template_folder='/src/app/website')
 
 # Make directories for mp3 and mp4
 creating_mp4_dir()
@@ -67,4 +67,4 @@ def youtube_convertation_mp3_api() -> Response:
                      download_name=mp3_name)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000)
