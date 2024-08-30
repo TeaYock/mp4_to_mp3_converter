@@ -2,6 +2,7 @@ from flask import Flask, request, send_file, redirect, render_template, Response
 from app.mp4_to_mp3 import (mp4_convertation_mp3, youtube_convertation_mp3, remove_file_make_response_data,
                             creating_mp4_dir, creating_mp3_dir, VideoProcessingError, NoAudioTrackError)
 from os import path, remove
+import re
 
 app = Flask(__name__, template_folder='../website')
 
@@ -56,15 +57,28 @@ def mp4_convertation_mp3_api() -> Response:
 def youtube_convertation_mp3_api() -> Response:
     # Getting YouTube url from arguments
     youtube_url = request.args.get('url', '')
+    try:
+        youtube_regex = (
+            r'(https?://)?(www\.)?'
+            r'(youtube|youtu|youtube-nocookie)\.(com|be)/'
+            r'(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
 
-    # Converting
-    mp3_path=youtube_convertation_mp3(youtube_url)
-    mp3_name=path.basename(mp3_path)
+        if re.match(youtube_regex, youtube_url):
+            pass
+        else:
+            raise ValueError("Invalid YouTube URL")
 
-    # Converting mp3 file to byte stream and sending response to client
-    response_data = remove_file_make_response_data(mp3_path = mp3_path)
-    return send_file(response_data, mimetype='audio/mpeg',
-                     download_name=mp3_name)
+        # Converting
+        mp3_path=youtube_convertation_mp3(youtube_url)
+        mp3_name=path.basename(mp3_path)
+
+        # Converting mp3 file to byte stream and sending response to client
+        response_data = remove_file_make_response_data(mp3_path = mp3_path)
+        return send_file(response_data, mimetype='audio/mpeg',
+                         download_name=mp3_name)
+    except ValueError as e:
+        error_response = make_response(jsonify({'error': str(e)}), 400)
+        return error_response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)

@@ -81,6 +81,7 @@ def youtube_convertation_mp3(youtube_url: str) -> Mp3Path:
     #  YouTube to mp3 convertation using yt_dlp
     except:
         ydl_opts = {
+            'cookiefile': '../../www.youtube.com_cookies.txt',
             'format': 'bestaudio/best',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
