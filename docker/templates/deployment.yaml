@@ -2,20 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mp3-converter-deployment
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: { { .Release.Name } }-deployment
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: mp3-converter
+      project: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: mp3-converter
+        project: {{ .Release.Name }}
     spec:
       containers:
-      - name: mp3-converter
-        image: teateatea/mp3_converter
+      - name: {{ .Release.Name }}-web
+        image: {{ .Values.container.image }}
         ports:
         - containerPort: 5000
         - containerPort: 5001
@@ -24,10 +26,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mp3-converter-service
+  name: {{ .Release.Name }}-service
 spec:
   selector:
-    app: mp3-converter
+    app: {{ .Release.Name }}-service
   ports:
     - protocol: TCP
       port: 5000
@@ -41,14 +43,14 @@ spec:
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: mp3-converter-hpa
+  name: {{ .Release.Name }}-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: mp3-converter-deployment
-  minReplicas: 1
-  maxReplicas: 10
+    name: {{ .Release.Name }}-deployment
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
   - type: Resource
     resource:
