@@ -4,9 +4,11 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-deployment
   labels:
-    app: { { .Release.Name } }-deployment
+    app: {{ .Release.Name }}-deployment
 spec:
-  replicas: {{ .Values.replicaCount }}
+  {{ with .Values}}
+  replicas: {{ .replicaCount }}
+  {{ end }}
   selector:
     matchLabels:
       project: {{ .Release.Name }}
@@ -17,7 +19,9 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-web
-        image: {{ .Values.container.image }}
+        {{ with .Values.container }}
+        image: {{ .image }}
+        {{ end }}
         ports:
         - containerPort: 5000
         - containerPort: 5001
@@ -49,8 +53,10 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ .Release.Name }}-deployment
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  {{ with .Values.hpa }}
+  minReplicas: {{ .minReplicas }}
+  maxReplicas: {{ .maxReplicas }}
+  {{ end }}
   metrics:
   - type: Resource
     resource:
