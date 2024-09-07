@@ -23,8 +23,10 @@ spec:
         image: {{ .image }}
         {{ end }}
         ports:
-        - containerPort: 5000
-        - containerPort: 5001
+        - name: http-port-5000
+          containerPort: 5000
+        - name: http-port-5001
+          containerPort: 5001
 ---
 #LoadBalancer
 apiVersion: v1
