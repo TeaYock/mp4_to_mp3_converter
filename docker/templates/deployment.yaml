@@ -44,7 +44,7 @@ spec:
   type: LoadBalancer
 ---
 #Autoscaler
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ .Release.Name }}-hpa
