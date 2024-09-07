@@ -23,10 +23,9 @@ spec:
         image: {{ .image }}
         {{ end }}
         ports:
-        - name: http-port-5000
-          containerPort: 5000
-        - name: http-port-5001
-          containerPort: 5001
+        - containerPort: 5000
+        - containerPort: 5001
+
 ---
 #LoadBalancer
 apiVersion: v1
@@ -37,10 +36,12 @@ spec:
   selector:
     app: {{ .Release.Name }}-service
   ports:
-    - protocol: TCP
+    - name: http-port-5000
+      protocol: TCP
       port: 5000
       targetPort: 5000
-    - protocol: TCP
+    - name: http-port-5001
+      protocol: TCP
       port: 5001
       targetPort: 5001
   type: LoadBalancer
