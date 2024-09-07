@@ -1,5 +1,5 @@
 container:
-  image: teateatea/mp3_converter:latest
+  image: teateatea/mp3_converter:v1
 
 replicaCount: 2
 hpa:
