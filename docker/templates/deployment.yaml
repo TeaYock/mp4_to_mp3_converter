@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        project: {{ .Release.Name }}-deployment
+        app: {{ .Release.Name }}-deployment
     spec:
       containers:
       - name: {{ .Release.Name }}-web
@@ -34,7 +34,7 @@ metadata:
   name: {{ .Release.Name }}-service
 spec:
   selector:
-    project: {{ .Release.Name }}-deployment
+    app: {{ .Release.Name }}-deployment
   ports:
     - name: http-port-5000
       protocol: TCP
