@@ -34,7 +34,7 @@ metadata:
   name: {{ .Release.Name }}-service
 spec:
   selector:
-    app: {{ .Release.Name }}-deployment
+    project: {{ .Release.Name }}-deployment
   ports:
     - name: http-port-5000
       protocol: TCP
