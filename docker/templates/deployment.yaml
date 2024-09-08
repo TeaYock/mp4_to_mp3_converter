@@ -11,7 +11,7 @@ spec:
   {{ end }}
   selector:
     matchLabels:
-      project: {{ .Release.Name }}
+      app: {{ .Release.Name }}-deployment
   template:
     metadata:
       labels:
