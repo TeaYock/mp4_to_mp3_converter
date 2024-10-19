@@ -27,7 +27,7 @@ spec:
         - containerPort: 5001
 
 ---
-# NodePort
+# LoadBalancer
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,13 +40,12 @@ spec:
       protocol: TCP
       port: 5000
       targetPort: 5000
-      nodePort: 30000
     - name: http-port-5001
       protocol: TCP
       port: 5001
       targetPort: 5001
-      nodePort: 30001
-  type: NodePort
+  type: LoadBalancer
+
 ---
 #Autoscaler
 apiVersion: autoscaling/v2
