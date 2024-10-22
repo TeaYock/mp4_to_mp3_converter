@@ -3,13 +3,106 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>MP4 to MP3 Converter</title>
+    <title>Media to MP3 Converter</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+      }
+
+      .tab {
+        overflow: hidden;
+        border-bottom: 1px solid #333;
+      }
+
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+        color: #e0e0e0;
+      }
+
+      .tab button:hover {
+        background-color: #333;
+      }
+
+      .tab button.active {
+        background-color: #333;
+      }
+
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #333;
+        border-top: none;
+      }
+
+      input[type="file"], input[type="url"], button[type="submit"] {
+        background-color: #333;
+        color: #e0e0e0;
+        border: 1px solid #555;
+        padding: 10px;
+        margin-top: 10px;
+      }
+
+      input[type="file"]:hover, input[type="url"]:hover, button[type="submit"]:hover {
+        background-color: #555;
+      }
+
+      h1, h3 {
+        color: #e0e0e0;
+      }
+    </style>
   </head>
   <body>
-    <h1>Upload your MP4 file to convert to MP3</h1>
-    <form action="http://localhost:5000/mp4_convertation_mp3" method="post" enctype="multipart/form-data">
-      <input type="file" name="mp4_file" accept="video/mp4">
-      <button type="submit">Upload</button>
-    </form>
+
+    <h1>Media to MP3 Converter</h1>
+
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'MP4')">Convert MP4 to MP3</button>
+      <button class="tablinks" onclick="openTab(event, 'YouTube')">Convert YouTube to MP3</button>
+    </div>
+
+    <div id="MP4" class="tabcontent">
+      <h3>Upload your MP4 file to convert to MP3</h3>
+      <form action="/mp4_convertation_mp3" method="post" enctype="multipart/form-data">
+        <input type="file" name="mp4_file" accept="video/mp4">
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+
+    <div id="YouTube" class="tabcontent">
+      <h3>Enter YouTube URL to convert to MP3</h3>
+      <form action="/youtube_convertation_mp3" method="get">
+        <input type="url" name="url" placeholder="Enter YouTube URL" required>
+        <button type="submit">Convert</button>
+      </form>
+    </div>
+
+    <script>
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // Open the default tab
+      document.querySelector('.tablinks').clЫick();
+    </script>
+
   </body>
 </html>
