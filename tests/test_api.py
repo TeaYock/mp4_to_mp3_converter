@@ -17,6 +17,7 @@ def client():
     rmtree('../mp4_files')
     rmtree('../mp3_files')
 
+
 # Test the homepage
 def test_index_page(client):
     response = client.get('/')
