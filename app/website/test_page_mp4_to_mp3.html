@@ -71,7 +71,7 @@
 
     <div id="MP4" class="tabcontent">
       <h3>Upload your MP4 file to convert to MP3</h3>
-      <form action="http://localhost:5000/mp4_convertation_mp3" method="post" enctype="multipart/form-data">
+      <form action="/mp4_convertation_mp3" method="post" enctype="multipart/form-data">
         <input type="file" name="mp4_file" accept="video/mp4">
         <button type="submit">Upload</button>
       </form>
@@ -79,7 +79,7 @@
 
     <div id="YouTube" class="tabcontent">
       <h3>Enter YouTube URL to convert to MP3</h3>
-      <form action="http://localhost:5000/youtube_convertation_mp3" method="get">
+      <form action="/youtube_convertation_mp3" method="get">
         <input type="url" name="url" placeholder="Enter YouTube URL" required>
         <button type="submit">Convert</button>
       </form>
@@ -101,7 +101,7 @@
       }
 
       // Open the default tab
-      document.querySelector('.tablinks').click();
+      document.querySelector('.tablinks').clЫick();
     </script>
 
   </body>
